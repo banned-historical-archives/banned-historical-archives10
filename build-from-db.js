@@ -12,7 +12,6 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-const m = new Map();
 (async () => {
   const range = [
     [1946, 5],
@@ -21,13 +20,16 @@ const m = new Map();
   // const range = [[1971,1], [1971,2]];
   // const range = [[1946,5], [1946,12]];
 
+  await fs.ensureDir(join(__dirname, './json'));
   for (let year = range[0][0]; year <= range[1][0]; ++year) {
     console.log(year);
+    await fs.ensureDir(join(__dirname, './json/' + year));
     for (
       let month = year === range[0][0] ? range[0][1] : 1;
       month <= 12;
       ++month
     ) {
+      await fs.ensureDir(join(__dirname, './json/' + year + '/' + month));
       const time_a = Moment(year + '-' + ensure2dig(month) + '-01');
       let month_b = month < 12 ? month + 1 : 1;
       let year_b = month < 12 ? year : year + 1;
@@ -48,26 +50,45 @@ const m = new Map();
         ),
       );
       if (!tmp || !tmp.length) break;
-      // res.push(...tmp);
+      let idx = 0;
 
       for (const i of tmp) {
         const pdate = i.postdate;
         const d1 = Moment(pdate * 1000).format('YYYY-MM-DD');
         const d = Moment(pdate * 1000).format('YYYY-MM');
 
-        const idx = m.get(d) || 0;
+        const parts = i.content.split('\n');
+        const page = parseInt(parts[0].slice(1));
         await fs.writeFile(
-          join(
-            __dirname,
-            `./json/${d.split('-')[0]}年${d.split('-')[1]}月/${idx}.md`,
-          ),
-          `### ${i.subject}
-${i.author}
-${d1}
-${i.content}
-`,
+          join(__dirname, `./json/${year}/${month}/${idx}.json`),
+          JSON.stringify({
+            title: i.subject,
+            authors: i.author
+              .split(" ")
+              .map((i) => i.trim())
+              .filter((i) => i),
+            dates: [
+              {
+                year,
+                month,
+                day: parseInt(d1.split("-")[2]),
+              },
+            ],
+            parts: parts
+              .slice(3)
+              .map((i) => ({
+                type: "paragraph",
+                text: i.trim(),
+              }))
+              .filter((i) => i.text),
+            comments: [],
+            comment_pivots: [],
+            description: "",
+            page_start: page,
+            page_end: page,
+          })
         );
-        m.set(d, (m.get(d) || 0) + 1);
+        ++idx;
       }
     }
   }
