@@ -20,13 +20,12 @@ const whitelist = ['张春桥','江青','王洪文','姚文元','毛远新','王
       ++month
     ) {
       await fs.ensureDir(join(__dirname, './selected/' + year + '/' + month));
-      let idx = 0;
 
       for (const i of await fs.readdir(
-        join(__dirname, `./selected/${year}/${month}`),
+        join(__dirname, `./json/${year}/${month}`),
       )) {
         const content = (
-          await fs.readFile(join(__dirname, `./selected/${year}/${month}/${i}`))
+          await fs.readFile(join(__dirname, `./json/${year}/${month}/${i}`))
         ).toString();
         let found = false;
         for (let j of whitelist) {
@@ -36,6 +35,7 @@ const whitelist = ['张春桥','江青','王洪文','姚文元','毛远新','王
           }
         }
         if (found) {
+          console.log(JSON.parse(content).title)
           await fs.copyFile(
             join(__dirname, `./json/${year}/${month}/${i}`),
             join(__dirname, `./selected/${year}/${month}/${i}`),
