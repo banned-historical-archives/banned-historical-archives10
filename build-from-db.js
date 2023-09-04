@@ -1,4 +1,4 @@
-const mysql      = require('mysql');
+const mysql = require('mysql');
 const fs = require('fs-extra');
 const Moment = require('moment');
 const { join } = require('path');
