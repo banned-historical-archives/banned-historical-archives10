@@ -43,11 +43,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+<<<<<<< HEAD
+=======
+      - run: cd parsed && git checkout --orphan x && git reset --hard
+>>>>>>> ebfd6a0 (fix_workflow)
       - run: cd ocr_helper && npm install && npm run build_parsed -- ../config ../ocr_cache ../ocr_patch ../parsed ../raw
       - run: git config --global http.postBuffer 2097152000
       - run: git config --global user.email "you@example.com"
       - run: git config --global user.name "Your Name"
 
+<<<<<<< HEAD
       - name: Check for changes
         id: check_changes
         run: |
@@ -69,6 +74,16 @@ jobs:
           git commit -m automation && git push
       - name: Invoke workflow
         if: steps.check_changes.outputs.changes == 'true'
+=======
+      - name: Commit and push changes
+        run: |
+          cd ./parsed
+          git add .
+          git commit -m automation
+          git push origin x:parsed -f
+
+      - name: Invoke workflow
+>>>>>>> ebfd6a0 (fix_workflow)
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: build.yml
