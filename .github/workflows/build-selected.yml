@@ -1,7 +1,7 @@
 name: build
 on:
   push:
-    branches: ['master']
+    branches: ['origin']
 
 permissions:
   contents: write
@@ -20,5 +20,6 @@ jobs:
       - run: git config --global user.email "you@example.com"
       - run: git config --global user.name "Your Name"
       - run: git add selected
+      - run: git add README.md
       - run: git commit -m i
-      - run: git push origin x:selected -f
+      - run: git push origin x:main -f
