@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const { join } = require('path');
 
-const whitelist = ['张春桥','江青','王洪文','姚文元','毛远新','王海容'];
+const whitelist = ['张春桥','江青','王洪文','姚文元','毛远新', '毛泽东'];
 function includes(str, arr) {
   str = str.replace(/松江青[浦年]/g, '').replace(/[浙镇吴隆黄]江青/g, '');
   for (const i of arr) {
@@ -38,7 +38,7 @@ function includes(str, arr) {
         const content = JSON.parse((
           await fs.readFile(join(__dirname, `./json/${year}/${month}/${i}`))
         ).toString());
-        if (includes(content.title, whitelist) || content.authors.reduce((m,k) => {
+        if (includes(content.title, [...whitelist, '毛主席']) || content.authors.reduce((m,k) => {
           return m || whitelist.includes(k)
         }, false)) {
           console.log(content.title)
