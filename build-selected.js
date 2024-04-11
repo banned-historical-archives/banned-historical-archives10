@@ -2,6 +2,17 @@ const fs = require('fs-extra');
 const { join } = require('path');
 
 const whitelist = ['张春桥','江青','王洪文','姚文元','毛远新','王海容'];
+function includes(str, arr) {
+  str = str.replace(/松江青[浦年]/g, '').replace(/[浙镇吴隆黄]江青/g, '');
+  for (const i of arr) {
+      if (str.indexOf(i) >= 0) {
+          console.log('#', i)
+          return true;
+      }
+  }
+  return false;
+}
+
 (async () => {
   const range = [
     [1946, 5],
@@ -24,18 +35,13 @@ const whitelist = ['张春桥','江青','王洪文','姚文元','毛远新','王
       for (const i of await fs.readdir(
         join(__dirname, `./json/${year}/${month}`),
       )) {
-        const content = (
+        const content = JSON.parse((
           await fs.readFile(join(__dirname, `./json/${year}/${month}/${i}`))
-        ).toString();
-        let found = false;
-        for (let j of whitelist) {
-          if (content.indexOf(j) >= 0) {
-            found = true;
-            break;
-          }
-        }
-        if (found) {
-          console.log(JSON.parse(content).title)
+        ).toString());
+        if (includes(content.title, whitelist) || content.authors.reduce((m,k) => {
+          return m || whiltelist.includes(k)
+        }, false)) {
+          console.log(content.title)
           await fs.copyFile(
             join(__dirname, `./json/${year}/${month}/${i}`),
             join(__dirname, `./selected/${year}/${month}/${i}`),
