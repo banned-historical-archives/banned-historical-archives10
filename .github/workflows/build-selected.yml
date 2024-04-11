@@ -1,4 +1,4 @@
-name: build
+name: build-selected
 on:
   push:
     branches: ['origin']
@@ -20,6 +20,5 @@ jobs:
       - run: git config --global user.email "you@example.com"
       - run: git config --global user.name "Your Name"
       - run: git add selected
-      - run: git add README.md
       - run: git commit -m i
       - run: git push origin x:main -f
