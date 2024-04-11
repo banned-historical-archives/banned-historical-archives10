@@ -39,7 +39,7 @@ function includes(str, arr) {
           await fs.readFile(join(__dirname, `./json/${year}/${month}/${i}`))
         ).toString());
         if (includes(content.title, whitelist) || content.authors.reduce((m,k) => {
-          return m || whiltelist.includes(k)
+          return m || whitelist.includes(k)
         }, false)) {
           console.log(content.title)
           await fs.copyFile(
