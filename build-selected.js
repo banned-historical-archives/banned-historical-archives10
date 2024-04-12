@@ -54,10 +54,10 @@ function includes(str, arr) {
       for (const i of await fs.readdir(
         join(__dirname, `./json/${year}/${month}`),
       )) {
-        const json = JSON.parse((
-          await fs.readFile(join(__dirname, `./json/${year}/${month}/${i}`))
-        ).toString());
-        const normalized_title = normalize(json.title)
+        const raw = (await fs.readFile(join(__dirname, `./json/${year}/${month}/${i}`))).toString();
+        const json = JSON.parse(raw);
+        const normalized_title = normalize(json.title);
+        const normalized_content = normalize(raw);
         if (
           includes(normalized_title, keywords) ||
           json.authors.reduce((m,k) => {
