@@ -14,6 +14,7 @@ const keywords_special = [
   {year_start: 1966, year_end: 1978, keyword: '汪东兴'},
   {year_start: 1966, year_end: 1978, content_keyword: '邓榕'},
   {year_start: 1966, year_end: 1978, content_keyword: '邓朴方'},
+  {year_start: 1958, year_end: 1981, content_keyword: '邓小平'},
 
 
 ];
@@ -60,12 +61,10 @@ function includes(str, arr) {
         const normalized_content = normalize(raw);
         if (
           includes(normalized_title, keywords) ||
-          json.authors.reduce((m,k) => {
-            return m || keywords.includes(k)
-          }, false) ||
+          includes(json.authors.join(','), keywords) ||
           keywords_special.reduce((m, k) => {
             return m || (
-              k.year_start >= json.dates[0].year && k.year_end <= json.dates[0].year && (
+              k.year_start <= json.dates[0].year && k.year_end >= json.dates[0].year && (
                 k.keyword ? (
                   normalized_title.indexOf(k.keyword) >= 0 ||
                   json.authors.reduce((m,a) => {
