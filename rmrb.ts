@@ -13,4 +13,4 @@ export default {
     "path": "selected",
     "resource_type": "book",
     "version": 2
-  }
+  };
